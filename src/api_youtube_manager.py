@@ -49,7 +49,16 @@ def get_latest_videos(api_key, channel_id, min_duration=None, max_results=5):
                 title = item['snippet']['title']
                 published_at = item['snippet']['publishedAt']
 
-                # Get video details including duration
+                # Support to omit videos with duration less than min_duration
+                if min_duration is None:
+                    video_data.append({
+                        'url': 'https://www.youtube.com/watch?v=' + video_id,
+                        'title': html.unescape(title),
+                        'published_at': published_at,
+                        'channel_name': channel_name
+                    })
+                    continue
+
                 video_details = youtube.videos().list(
                     part='contentDetails',
                     id=video_id
@@ -59,7 +68,7 @@ def get_latest_videos(api_key, channel_id, min_duration=None, max_results=5):
                 duration = parse_duration(duration_str)
 
                 # Check if duration is greater than min_duration
-                if min_duration is None or duration.total_seconds() > min_duration:
+                if duration.total_seconds() > min_duration:
                     video_data.append({
                         'url': 'https://www.youtube.com/watch?v=' + video_id,
                         'title': html.unescape(title),
