@@ -1,9 +1,10 @@
 {
-    "youtube": {
-        "apiKey": "AIzaSyD-1J1J1J1J1J1J1J1J1J1J1J1J1J1J1"
-    },
+    "youtube_api_key": "",
     "youtube_channel_list": [
-        "UCJFp8uSYCjXOMnkUyb3CQ3Q",
-        "UCJFp8uSYCjXOMnkUyb3CQ3Q"
+        "",
+        "",
+        "",
+        "",
+        ""
     ]
 }
