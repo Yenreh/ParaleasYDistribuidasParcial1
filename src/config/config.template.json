@@ -1,10 +1,11 @@
 {
-    "youtube_api_key": "",
+    "youtube_api_key": "<api_key>",
     "youtube_channel_list": [
-        "",
-        "",
-        "",
-        "",
-        ""
-    ]
+        {
+            "channel_name": "<channel_name>",
+            "chanel_has_id": <true/false>,
+            "channel_id": "<channel_id/channel_custom_id>"
+        }
+    ],
+    "ytdlp_download_link": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp"
 }
