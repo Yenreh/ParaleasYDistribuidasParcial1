@@ -1,3 +1,4 @@
+import argparse
 import multiprocessing
 import threading
 from datetime import datetime
@@ -18,8 +19,6 @@ youtube_dlp_download_link = APP_CONFIG.get("ytdlp_download_link")
 test_channel_id = "UC6nSFpj9HTCZ5t-N3Rm3-HA"
 test_videos = [{'url': 'https://www.youtube.com/watch?v=u1Ijupdjv_I', 'title': 'How To Make Galinstan', 'published_at': '2024-05-02T20:17:10Z', 'channel_name': 'Vsauce'}, {'url': 'https://www.youtube.com/watch?v=7ByBcO9w6QQ', 'title': 'Words That Look Similar ON YOUR LIPS', 'published_at': '2024-04-26T18:10:57Z', 'channel_name': 'Vsauce'}, {'url': 'https://www.youtube.com/watch?v=VWO6lbJX-h0', 'title': "A Book That Didn't Age Well", 'published_at': '2024-04-24T18:30:17Z', 'channel_name': 'Vsauce'}, {'url': 'https://www.youtube.com/watch?v=Tx4qr9x1MrI', 'title': 'A trick that always works...', 'published_at': '2024-04-22T20:42:44Z', 'channel_name': 'Vsauce'}, {'url': 'https://www.youtube.com/watch?v=aAGvGbSoWVc', 'title': 'The Oldest Camera Photograph', 'published_at': '2024-04-20T16:11:43Z', 'channel_name': 'Vsauce'}]
 
-downloadFile(youtube_dlp_download_link, YT_DLP_PATH)
-
 
 def createDirectories():
     if not os.path.exists(OUTPUT_PATH):
@@ -33,6 +32,8 @@ def downloadVideo(video, downloads_path, yt_dl_path):
     video_url = video.get("url")
     video_output = f"{downloads_path}/{video.get('channel_name')} - {video.get('title')}.mp4"
     audio_output = f"{downloads_path}/{video.get('channel_name')} - {video.get('title')}.mp3"
+    if os.path.exists(audio_output):
+        return
     downloadMP4Video(url=video_url, video_output=video_output, yt_dl_path=yt_dl_path)
     convertToMP3(input_file=video_output, output_file=audio_output)
     log_message = f"Video: {video.get('title')} - Channel: {video.get('channel_name')} - Published At: {video.get('published_at')} - Downloaded at: {datetime.now()}"
@@ -92,3 +93,21 @@ def downloadVideosMultiProcessing(youtube_channel_list, youtube_api_key, num_pro
         process.join()
 
 
+def main():
+    parser = argparse.ArgumentParser(description="Descarga videos de YouTube.")
+    parser.add_argument('--mode', choices=['sequential', 'multithreaded', 'multiprocessing'], required=True, help="Modo de ejecución.")
+    parser.add_argument('--num', type=int, default=4, help="Número de hilos o procesos para los modos multithreaded y multiprocessing.")
+    args = parser.parse_args()
+
+    createDirectories()
+
+    if args.mode == 'sequential':
+        downloadVideosSequential(youtube_channel_list, youtube_api_key)
+    elif args.mode == 'multithreaded':
+        downloadVideosMultiThreaded(youtube_channel_list, youtube_api_key, args.num)
+    elif args.mode == 'multiprocessing':
+        downloadVideosMultiProcessing(youtube_channel_list, youtube_api_key, args.num)
+
+
+if __name__ == "__main__":
+    main()
