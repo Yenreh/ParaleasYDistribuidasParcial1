@@ -1,6 +1,7 @@
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from isodate import parse_duration
+import html
 
 
 def get_channel_id(api_key, username):
@@ -26,14 +27,14 @@ def get_channel_id(api_key, username):
 def get_latest_videos(api_key, channel_id, min_duration=None, max_results=5):
     youtube = build('youtube', 'v3', developerKey=api_key)
     try:
-        # Initialize list to store valid video URLs
-        video_urls = []
+        # Initialize list to store valid video URLs and their details
+        video_data = []
         # Keep fetching videos until we have enough
         next_page_token = None
-        while len(video_urls) < max_results:
+        while len(video_data) < max_results:
             # Obtain the list of videos from the channel
             videos = youtube.search().list(
-                part='id',
+                part='id,snippet',
                 channelId=channel_id,
                 order='date',
                 maxResults=max_results,
@@ -41,10 +42,13 @@ def get_latest_videos(api_key, channel_id, min_duration=None, max_results=5):
                 pageToken=next_page_token
             ).execute()
 
-            # Extract the IDs of video
-            video_ids = [item['id']['videoId'] for item in videos['items']]
+            # Extract the IDs of video and their details
+            for item in videos['items']:
+                video_id = item['id']['videoId']
+                channel_name = item['snippet']['channelTitle']
+                title = item['snippet']['title']
+                published_at = item['snippet']['publishedAt']
 
-            for video_id in video_ids:
                 # Get video details including duration
                 video_details = youtube.videos().list(
                     part='contentDetails',
@@ -55,10 +59,13 @@ def get_latest_videos(api_key, channel_id, min_duration=None, max_results=5):
                 duration = parse_duration(duration_str)
 
                 # Check if duration is greater than min_duration
-                if min_duration is None:
-                    video_urls.append('https://www.youtube.com/watch?v=' + video_id)
-                elif duration.total_seconds() > min_duration:
-                    video_urls.append('https://www.youtube.com/watch?v=' + video_id)
+                if min_duration is None or duration.total_seconds() > min_duration:
+                    video_data.append({
+                        'url': 'https://www.youtube.com/watch?v=' + video_id,
+                        'title': html.unescape(title),
+                        'published_at': published_at,
+                        'channel_name': channel_name
+                    })
 
             # Update nextPageToken for next page of results
             next_page_token = videos.get('nextPageToken')
@@ -67,7 +74,7 @@ def get_latest_videos(api_key, channel_id, min_duration=None, max_results=5):
             if not next_page_token:
                 break
 
-        return video_urls[:max_results]
+        return video_data[:max_results]
 
     except HttpError as e:
         print("Error:", e)
