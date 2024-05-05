@@ -5,6 +5,7 @@ from helper import *
 from api_youtube_manager import *
 
 CONFIG_PATH = 'config/config.json'
+OUTPUT_PATH = 'output'
 YT_DLP_PATH = 'output/yt-dlp'
 DOWNLOADS_PATH = 'output/downloads'
 LOG_PATH = 'output/log.log'
@@ -18,6 +19,14 @@ test_channel_id = "UC6nSFpj9HTCZ5t-N3Rm3-HA"
 test_videos = [{'url': 'https://www.youtube.com/watch?v=u1Ijupdjv_I', 'title': 'How To Make Galinstan', 'published_at': '2024-05-02T20:17:10Z', 'channel_name': 'Vsauce'}, {'url': 'https://www.youtube.com/watch?v=7ByBcO9w6QQ', 'title': 'Words That Look Similar ON YOUR LIPS', 'published_at': '2024-04-26T18:10:57Z', 'channel_name': 'Vsauce'}, {'url': 'https://www.youtube.com/watch?v=VWO6lbJX-h0', 'title': "A Book That Didn't Age Well", 'published_at': '2024-04-24T18:30:17Z', 'channel_name': 'Vsauce'}, {'url': 'https://www.youtube.com/watch?v=Tx4qr9x1MrI', 'title': 'A trick that always works...', 'published_at': '2024-04-22T20:42:44Z', 'channel_name': 'Vsauce'}, {'url': 'https://www.youtube.com/watch?v=aAGvGbSoWVc', 'title': 'The Oldest Camera Photograph', 'published_at': '2024-04-20T16:11:43Z', 'channel_name': 'Vsauce'}]
 
 downloadFile(youtube_dlp_download_link, YT_DLP_PATH)
+
+
+def createDirectories():
+    if not os.path.exists(OUTPUT_PATH):
+        os.makedirs(OUTPUT_PATH)
+    if not os.path.exists(DOWNLOADS_PATH):
+        os.makedirs(DOWNLOADS_PATH)
+    os.system(f"chmod -R 777 {OUTPUT_PATH}")
 
 
 def downloadVideo(video, downloads_path, yt_dl_path):
@@ -37,6 +46,7 @@ def downloadVideosSequential(youtube_channel_list, youtube_api_key):
         videos = test_videos
         for video in videos:
             downloadVideo(video, DOWNLOADS_PATH, YT_DLP_PATH)
+
 
 def downloadVideosMultiThreaded(youtube_channel_list, youtube_api_key, num_threads):
     threads = []
@@ -59,6 +69,7 @@ def downloadVideosMultiThreaded(youtube_channel_list, youtube_api_key, num_threa
     for thread in threads:
         thread.join()
 
+
 def downloadVideosMultiProcessing(youtube_channel_list, youtube_api_key, num_processes):
     processes = []
     for channel in youtube_channel_list:
@@ -79,4 +90,5 @@ def downloadVideosMultiProcessing(youtube_channel_list, youtube_api_key, num_pro
                 processes.append(process)
     for process in processes:
         process.join()
+
 
