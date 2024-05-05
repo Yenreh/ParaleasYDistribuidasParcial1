@@ -9,11 +9,12 @@ youtube_channel_list = APP_CONFIG.get("youtube_channel_list")
 
 print(youtube_channel_list)
 
-for channel in youtube_channel_list:
-    channel_id = channel.get("channel_id") if channel.get("channel_has_id") else get_channel_id(youtube_api_key, channel.get("channel_id"))
-    print(channel_id)
-    videos = get_latest_videos(youtube_api_key, channel_id)
-    print(videos)
+# for channel in youtube_channel_list:
+#     channel_id = channel.get("channel_id") if channel.get("channel_has_id") else get_channel_id(youtube_api_key, channel.get("channel_id"))
+#     print(channel_id)
+#     videos = get_latest_videos(youtube_api_key, channel_id)
+#     print(videos)
+#
+#
 
-
-
+print(get_latest_videos(youtube_api_key, "UC6nSFpj9HTCZ5t-N3Rm3-HA"))
