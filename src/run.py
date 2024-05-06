@@ -1,6 +1,7 @@
 import argparse
 import multiprocessing
 import threading
+import timeit
 from datetime import datetime
 from helper import *
 from api_youtube_manager import *
@@ -102,13 +103,21 @@ def main():
     createDirectories()
     if not os.path.exists(YT_DLP_PATH):
         downloadFile(YT_DLP_DOWNLOAD_LINK, YT_DLP_PATH)
-
     if args.mode == 'sequential':
+        starting_time = timeit.default_timer()
         downloadVideosSequential(YOUTUBE_CHANNEL_LIST, YOUTUBE_API_KEY)
+        ending_time = timeit.default_timer()
+        print(f"Tiempo transcurrido: {ending_time - starting_time}")
     elif args.mode == 'multithreaded':
+        starting_time = timeit.default_timer()
         downloadVideosMultiThreaded(YOUTUBE_CHANNEL_LIST, YOUTUBE_API_KEY, args.num)
+        ending_time = timeit.default_timer()
+        print(f"Tiempo transcurrido: {ending_time - starting_time}")
     elif args.mode == 'multiprocessing':
+        starting_time = timeit.default_timer()
         downloadVideosMultiProcessing(YOUTUBE_CHANNEL_LIST, YOUTUBE_API_KEY, args.num)
+        ending_time = timeit.default_timer()
+        print(f"Tiempo transcurrido: {ending_time - starting_time}")
 
 
 if __name__ == "__main__":

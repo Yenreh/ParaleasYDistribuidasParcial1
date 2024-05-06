@@ -6,6 +6,7 @@
 ### Descripción
 Esta aplicación descarga los últimos 5 videos de una lista de canales de youtube, usando la api de youtube y yt-dlp,
 luego estos videos se convierten a mp3.
+Al finalizar la ejecución se muestra en consola el tiempo total de ejecución.
 
 ### Requerimientos
 - Crear una Api Key en https://console.cloud.google.com/
