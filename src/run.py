@@ -100,7 +100,8 @@ def main():
     args = parser.parse_args()
 
     createDirectories()
-    downloadFile(YT_DLP_DOWNLOAD_LINK, YT_DLP_PATH)
+    if not os.path.exists(YT_DLP_PATH):
+        downloadFile(YT_DLP_DOWNLOAD_LINK, YT_DLP_PATH)
 
     if args.mode == 'sequential':
         downloadVideosSequential(YOUTUBE_CHANNEL_LIST, YOUTUBE_API_KEY)
