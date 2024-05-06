@@ -15,7 +15,7 @@ pip<python_version> install -r requirements.txt
   - Agregar la Api Key en el archivo config.json
   - Agregar los datos de los canales en el archivo config.json
   - Para el channel_id se puede usar el id del canal o un id personalizado
-  - Si se usa un id personalizado se debe agregar el campo channel_has_id como true
+  - Si se usa un id personalizado se debe agregar el campo channel_has_id como true sino se debe agregar como false
 ```json
 {
   "youtube_api_key": "<api_key>",
