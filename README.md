@@ -4,6 +4,8 @@
 - **Herney Eduardo Quintero Trochez** 1528556
 
 ### Descripción
+Esta aplicación descarga los últimos 5 videos de una lista de canales de youtube, usando la api de youtube y yt-dlp,
+luego estos videos se convierten a mp3.
 
 ### Requerimientos
 - Crear una Api Key en https://console.cloud.google.com/
